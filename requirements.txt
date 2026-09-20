@@ -4,3 +4,7 @@ numpy
 scikit-learn
 matplotlib
 seaborn
+xgboost
+category_encoders
+joblib
+imbalanced-learn
