@@ -1,6 +1,6 @@
-# Student Retention Analysis & Prediction
+# Student Retention Analysis & Prediction (Statistical Modeling)
 
-This project focuses on analyzing student data to predict academic retention, specifically classifying whether a student will ultimately **Graduate**, remain **Enrolled**, or **Dropout**. By leveraging machine learning pipelines and comprehensive statistical inference, this system provides actionable insights into student success and risk factors.
+This project focuses on analyzing student data to predict academic retention, specifically classifying whether a student will ultimately **Graduate**, remain **Enrolled**, or **Dropout**. Following specific assignment rubrics, this project exclusively utilizes **Statistical Modeling** techniques rather than tree-based or ensemble machine learning algorithms.
 
 ## 📊 The Dataset
 
@@ -13,48 +13,39 @@ The dataset was gathered by the Research Center for Endogenous Resource Valoriza
 - **Financial Situation**: Tuition fees up to date, debtor status, and scholarship holder.
 - **Macroeconomic Factors**: Unemployment rate, inflation rate, and GDP.
 
-## 🔍 Exploratory Data Analysis (EDA) & Statistical Inference
+## 🔍 Exploratory Data Analysis (EDA) & Data Preprocessing
 
-Comprehensive Exploratory Data Analysis (EDA) and rigorous statistical testing were conducted to uncover hidden patterns and significant relationships between the features and the target variable. 
+Comprehensive Exploratory Data Analysis (EDA) and preprocessing were conducted:
+- **Statistical Tests**: ANOVA, Chi-Square contingency, Fisher's Exact test, and Tukey HSD were used to identify the most statistically significant predictors of student success and dropout rates.
+- **Multicollinearity Removal**: Features with absolute correlation `|r| > 0.85` were dropped to satisfy statistical model assumptions.
+- **Imbalance Fix**: The dataset struggles heavily with predicting "Enrolled" students. To mitigate this, **SMOTE** (Synthetic Minority Over-sampling Technique) was applied exclusively to the training fold to avoid data leakage.
 
-- **Statistical Tests Employed**: ANOVA, Chi-Square contingency, Fisher's Exact test, and Tukey HSD.
-- **Insights**: These tests helped identify the most statistically significant predictors of student success and dropout rates, emphasizing the critical role of early academic performance (grades and approved units), financial stability (tuition fees and scholarships), and demographic factors (age at enrollment).
+## 📈 Statistical Modeling Pipeline
 
-## 🧠 Machine Learning Modeling
+As per the requirements, complex machine learning algorithms (like Random Forest and XGBoost) were completely removed in favor of the **regularized linear / Generalized Linear Model (GLM) family**.
 
-The classification task is challenging due to the inherent **class imbalance**, particularly the difficulty in correctly predicting the "Enrolled" class compared to "Graduate" and "Dropout". 
+### Algorithms Evaluated
+1. **Logistic Regression (baseline)**: Multinomial GLM without penalty.
+2. **LASSO**: GLM with L1 penalty (automatic feature selection).
+3. **Elastic Net**: GLM with both L1 and L2 penalties.
+4. **Ridge Classifier**: GLM with pure L2 penalty (reference baseline).
 
-### 1. Handling Imbalance
-To address the class imbalance, **SMOTE** (Synthetic Minority Over-sampling Technique) was integrated into the pipeline to artificially synthesize data points for the minority classes, dramatically improving the F1-scores across all algorithms.
+### Hyperparameter Fine-Tuning
+The statistical models were fine-tuned to extract maximum performance:
+- **RandomizedSearchCV**: Explored broad search spaces for both LASSO (regularization strength) and Elastic Net (l1_ratio).
+- **GridSearchCV**: Used to exhaustively refine the LASSO parameters.
+- **Optuna**: Applied to Elastic Net to efficiently navigate the continuous hyperparameter space via Bayesian Optimization.
 
-### 2. Algorithms Evaluated
-Several classification algorithms were evaluated and compared based on their **Cross-Validation F1-score** (the harmonic mean of precision and recall):
-- Logistic Regression
-- Decision Tree Classifier
-- Random Forest Classifier 
-- XGBoost Classifier
-- CatBoost Classifier
+### Final Selection & Conclusions
+The **regularized logistic-regression family (LASSO and Elastic Net)** achieves highly competitive ROC-AUC scores (~0.83) on this dataset *without* needing complex tree-based models, offering a much more interpretable coefficient set.
 
-**Random Forest** and **XGBoost** consistently outperformed the others and were selected for advanced fine-tuning.
-
-### 3. Hyperparameter Fine-Tuning
-A multi-layered approach was taken to squeeze the best performance out of the selected models:
-- **RandomizedSearchCV**: Used initially for both Random Forest and XGBoost to broadly explore the hyperparameter space.
-- **GridSearchCV**: Applied to **Random Forest** to exhaustively search a narrowed parameter grid, yielding a robust, normally-distributed ROC-AUC score of ~0.828.
-- **Optuna**: Applied to **XGBoost**. Because XGBoost has a vast, continuous search space that makes Grid Search computationally infeasible, Optuna's Bayesian optimization was utilized, resulting in a slightly higher ROC-AUC of ~0.829.
-
-### 4. Final Selection & Error Analysis
-On the unseen test set, **XGBoost** proved to be the superior model (ROC-AUC: 0.8307, Accuracy: 70.3%, F1-Score: 70.4%). 
-- The model excels at identifying **Graduates** (81% F1) and **Dropouts** (71% F1).
-- Predicting the transitional **Enrolled** state remains the hardest challenge (41% F1), reflecting real-world ambiguity in intermediate academic statuses.
-
-The final model pipeline (`final_xgboost_dropout_model.joblib`) natively handles scaling, missing value imputation, label encoding, and prediction.
+**LASSO (Logistic Regression with L1 Penalty)** was selected as the final model because it offers the best trade-off between predictive performance and **interpretability**. By shrinking less important feature coefficients to zero, it isolates the true drivers of student retention.
 
 ---
 
 ## 🚀 Running the Interactive UI
 
-An interactive Gradio Web UI has been developed for real-time predictions. The UI focuses on the 12 most predictive features determined during EDA, automatically handling imputations for the rest.
+An interactive Gradio Web UI has been developed for real-time predictions. The UI focuses on the most predictive features, automatically handling imputations for the rest.
 
 ### Local Setup
 Ensure you have Python 3 installed, then run the following:
