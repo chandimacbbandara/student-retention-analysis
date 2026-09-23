@@ -2,11 +2,22 @@
 # Student Retention Analysis — .gitignore
 # ============================================================
 
-# ----- Local dataset storage (never commit raw data) --------
+# ----- Local dataset storage & raw data ---------------------
 /data/
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.sqlite
+*.sqlite3
+*.db
 
 # ----- Python environment & cache ---------------------------
 .venv/
+venv/
+env/
+ENV/
+.env/
 __pycache__/
 *.py[cod]
 *.pyo
@@ -15,26 +26,53 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
 *.egg
 
 # ----- Jupyter Notebook artifacts ---------------------------
 .ipynb_checkpoints/
 *.ipynb_checkpoints
+catboost_info/
+**/catboost_info/
+
+# ----- Machine learning logs & experiment tracking -----------
+wandb/
+mlruns/
+tensorboard/
+lightning_logs/
+
+# ----- Testing & Coverage -----------------------------------
+.pytest_cache/
+.coverage
+htmlcov/
 
 # ----- Environment variables & secrets ----------------------
 .env
 .env.*
 *.secret
+*.key
+*.pem
 
 # ----- IDE & OS files ---------------------------------------
 .idea/
 .vscode/
 *.swp
 *.swo
+*~
 .DS_Store
 Thumbs.db
+.gemini/
 
 # ----- Logs & temporary files -------------------------------
 *.log
 *.tmp
+*.temp
 *.cache
+scratch/
