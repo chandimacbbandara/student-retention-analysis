@@ -1,7 +1,6 @@
 # ============================================================
 # Student Retention Analysis — .gitattributes
 # Git Large File Storage (Git LFS) configuration
-
 # ----- Machine Learning Models & Serialized Artifacts -------
 *.joblib filter=lfs diff=lfs merge=lfs -text
 *.pkl filter=lfs diff=lfs merge=lfs -text
