@@ -1,3 +1,15 @@
+---
+title: Student Retention Analysis
+emoji: 💻
+colorFrom: yellow
+colorTo: blue
+sdk: gradio
+sdk_version: 6.28.0
+python_version: '3.12'
+app_file: app.py
+pinned: false
+---
+
 # Student Retention Analysis & Prediction
 
 This project focuses on analyzing student data to predict academic retention, specifically classifying whether a student will ultimately **Graduate**, remain **Enrolled**, or **Dropout**. To achieve robust performance, the system combines data preprocessing, multiple machine-learning models, and a **Stacking Ensemble**.
