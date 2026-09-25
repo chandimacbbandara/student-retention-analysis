@@ -1,8 +1,8 @@
-# Student Retention Analysis & Prediction (Statistical Modeling)
+# Student Retention Analysis & Prediction
 
-This project focuses on analyzing student data to predict academic retention, specifically classifying whether a student will ultimately **Graduate**, remain **Enrolled**, or **Dropout**. Following specific assignment rubrics, this project exclusively utilizes **Statistical Modeling** techniques rather than tree-based or ensemble machine learning algorithms.
+This project focuses on analyzing student data to predict academic retention, specifically classifying whether a student will ultimately **Graduate**, remain **Enrolled**, or **Dropout**. To achieve robust performance, the system combines data preprocessing, multiple machine-learning models, and a **Stacking Ensemble**.
 
-## 📊 The Dataset
+## The Dataset
 
 The dataset was gathered by the Research Center for Endogenous Resource Valorization, Polytechnic Institute of Portalegre. It consists of multiple features characterizing each student's academic path, socioeconomic background, and macroeconomic indicators at the time of enrollment.
 
@@ -13,39 +13,69 @@ The dataset was gathered by the Research Center for Endogenous Resource Valoriza
 - **Financial Situation**: Tuition fees up to date, debtor status, and scholarship holder.
 - **Macroeconomic Factors**: Unemployment rate, inflation rate, and GDP.
 
-## 🔍 Exploratory Data Analysis (EDA) & Data Preprocessing
+## Exploratory Data Analysis (EDA) & Data Preprocessing
 
 Comprehensive Exploratory Data Analysis (EDA) and preprocessing were conducted:
 - **Statistical Tests**: ANOVA, Chi-Square contingency, Fisher's Exact test, and Tukey HSD were used to identify the most statistically significant predictors of student success and dropout rates.
 - **Multicollinearity Removal**: Features with absolute correlation `|r| > 0.85` were dropped to satisfy statistical model assumptions.
 - **Imbalance Fix**: The dataset struggles heavily with predicting "Enrolled" students. To mitigate this, **SMOTE** (Synthetic Minority Over-sampling Technique) was applied exclusively to the training fold to avoid data leakage.
 
-## 📈 Statistical Modeling Pipeline
+## Machine Learning Architecture & Stacking Ensemble
 
-As per the requirements, complex machine learning algorithms (like Random Forest and XGBoost) were completely removed in favor of the **regularized linear / Generalized Linear Model (GLM) family**.
+Instead of relying on a single algorithm, this project uses a **Stacking Ensemble** architecture. This allows four different, complementary base models to produce initial predictions, which are then combined by a final meta-learner for maximum accuracy and robustness.
 
-### Algorithms Evaluated
-1. **Logistic Regression (baseline)**: Multinomial GLM without penalty.
-2. **LASSO**: GLM with L1 penalty (automatic feature selection).
-3. **Elastic Net**: GLM with both L1 and L2 penalties.
-4. **Ridge Classifier**: GLM with pure L2 penalty (reference baseline).
+### Base Models Evaluated:
+1. **LASSO**: Generalized Linear Model (GLM) with L1 penalty for feature selection and interpretability.
+2. **Elastic Net**: GLM with both L1 and L2 penalties.
+3. **XGBoost**: Highly optimized, scalable gradient-boosted decision tree algorithm.
+4. **Gradient Boosting**: Scikit-Learn's implementation of gradient boosting to capture non-linear relationships.
 
-### Hyperparameter Fine-Tuning
-The statistical models were fine-tuned to extract maximum performance:
-- **RandomizedSearchCV**: Explored broad search spaces for both LASSO (regularization strength) and Elastic Net (l1_ratio).
-- **GridSearchCV**: Used to exhaustively refine the LASSO parameters.
-- **Optuna**: Applied to Elastic Net to efficiently navigate the continuous hyperparameter space via Bayesian Optimization.
+### Ensemble Architecture Diagram
 
-### Final Selection & Conclusions
-The **regularized logistic-regression family (LASSO and Elastic Net)** achieves highly competitive ROC-AUC scores (~0.83) on this dataset *without* needing complex tree-based models, offering a much more interpretable coefficient set.
+```mermaid
+graph TD
+    subgraph Base Models
+        A[LASSO]
+        B[Elastic Net]
+        C[XGBoost]
+        D[Gradient Boosting]
+    end
 
-**LASSO (Logistic Regression with L1 Penalty)** was selected as the final model because it offers the best trade-off between predictive performance and **interpretability**. By shrinking less important feature coefficients to zero, it isolates the true drivers of student retention.
+    subgraph Meta-Learner
+        E[Logistic Regression<br>5-fold stacking]
+    end
+
+    subgraph Prediction
+        F[Dropout / Enrolled / Graduate]
+    end
+
+    A --> E
+    B --> E
+    C --> E
+    D --> E
+    E --> F
+```
+
+### Model Performance
+
+The stacked ensemble approach significantly improves the robustness of the predictions. Below is the performance evaluation of the models on the test set:
+
+| Model | Accuracy | Macro-F1 | ROC-AUC |
+|-------|----------|----------|---------|
+| LASSO | 74.99% | 70.88 | 88.45 |
+| Elastic Net | 74.95% | 70.83 | 88.42 |
+| XGBoost | 77.40% | 72.48 | 88.67 |
+| Gradient Boosting | 77.03% | 72.37 | 88.84 |
+| **Stacked Ensemble** | **77.76%** | **72.10** | **89.04** |
+
+> [!NOTE]
+> **Metric Interpretation:** Accuracy measures overall correct predictions. Macro-F1 gives equal importance to all three classes (vital since "Enrolled" is a minority class). ROC-AUC measures how effectively the model separates the three outcome classes. The Stacked Ensemble yields the highest Accuracy and ROC-AUC.
 
 ---
 
-## 🚀 Running the Interactive UI
+## Running the Interactive UI
 
-An interactive Gradio Web UI has been developed for real-time predictions. The UI focuses on the most predictive features, automatically handling imputations for the rest.
+An interactive Gradio Web UI has been developed for real-time predictions. The UI focuses on the most predictive features, handles input formatting automatically, and explains the models and features in a comprehensive "How It Works" and "Dataset Dictionary" tabs.
 
 ### Local Setup
 Ensure you have Python 3 installed, then run the following:
