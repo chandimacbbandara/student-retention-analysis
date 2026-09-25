@@ -1,0 +1,8 @@
+.venv
+.git
+__pycache__
+node_modules
+.pytest_cache
+*.joblib.bak
+.env
+.ipynb_checkpoints
