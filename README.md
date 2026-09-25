@@ -1,8 +1,8 @@
 # Student Retention Analysis & Prediction
 
-This project focuses on analyzing student data to predict academic retention, specifically classifying whether a student will ultimately **Graduate**, remain **Enrolled**, or **Dropout**. By leveraging machine learning pipelines and comprehensive statistical inference, this system provides actionable insights into student success and risk factors.
+This project focuses on analyzing student data to predict academic retention, specifically classifying whether a student will ultimately **Graduate**, remain **Enrolled**, or **Dropout**. To achieve robust performance, the system combines data preprocessing, multiple machine-learning models, and a **Stacking Ensemble**.
 
-## 📊 The Dataset
+## The Dataset
 
 The dataset was gathered by the Research Center for Endogenous Resource Valorization, Polytechnic Institute of Portalegre. It consists of multiple features characterizing each student's academic path, socioeconomic background, and macroeconomic indicators at the time of enrollment.
 
@@ -13,48 +13,69 @@ The dataset was gathered by the Research Center for Endogenous Resource Valoriza
 - **Financial Situation**: Tuition fees up to date, debtor status, and scholarship holder.
 - **Macroeconomic Factors**: Unemployment rate, inflation rate, and GDP.
 
-## 🔍 Exploratory Data Analysis (EDA) & Statistical Inference
+## Exploratory Data Analysis (EDA) & Data Preprocessing
 
-Comprehensive Exploratory Data Analysis (EDA) and rigorous statistical testing were conducted to uncover hidden patterns and significant relationships between the features and the target variable. 
+Comprehensive Exploratory Data Analysis (EDA) and preprocessing were conducted:
+- **Statistical Tests**: ANOVA, Chi-Square contingency, Fisher's Exact test, and Tukey HSD were used to identify the most statistically significant predictors of student success and dropout rates.
+- **Multicollinearity Removal**: Features with absolute correlation `|r| > 0.85` were dropped to satisfy statistical model assumptions.
+- **Imbalance Fix**: The dataset struggles heavily with predicting "Enrolled" students. To mitigate this, **SMOTE** (Synthetic Minority Over-sampling Technique) was applied exclusively to the training fold to avoid data leakage.
 
-- **Statistical Tests Employed**: ANOVA, Chi-Square contingency, Fisher's Exact test, and Tukey HSD.
-- **Insights**: These tests helped identify the most statistically significant predictors of student success and dropout rates, emphasizing the critical role of early academic performance (grades and approved units), financial stability (tuition fees and scholarships), and demographic factors (age at enrollment).
+## Machine Learning Architecture & Stacking Ensemble
 
-## 🧠 Machine Learning Modeling
+Instead of relying on a single algorithm, this project uses a **Stacking Ensemble** architecture. This allows four different, complementary base models to produce initial predictions, which are then combined by a final meta-learner for maximum accuracy and robustness.
 
-The classification task is challenging due to the inherent **class imbalance**, particularly the difficulty in correctly predicting the "Enrolled" class compared to "Graduate" and "Dropout". 
+### Base Models Evaluated:
+1. **LASSO**: Generalized Linear Model (GLM) with L1 penalty for feature selection and interpretability.
+2. **Elastic Net**: GLM with both L1 and L2 penalties.
+3. **XGBoost**: Highly optimized, scalable gradient-boosted decision tree algorithm.
+4. **Gradient Boosting**: Scikit-Learn's implementation of gradient boosting to capture non-linear relationships.
 
-### 1. Handling Imbalance
-To address the class imbalance, **SMOTE** (Synthetic Minority Over-sampling Technique) was integrated into the pipeline to artificially synthesize data points for the minority classes, dramatically improving the F1-scores across all algorithms.
+### Ensemble Architecture Diagram
 
-### 2. Algorithms Evaluated
-Several classification algorithms were evaluated and compared based on their **Cross-Validation F1-score** (the harmonic mean of precision and recall):
-- Logistic Regression
-- Decision Tree Classifier
-- Random Forest Classifier 
-- XGBoost Classifier
-- CatBoost Classifier
+```mermaid
+graph TD
+    subgraph Base Models
+        A[LASSO]
+        B[Elastic Net]
+        C[XGBoost]
+        D[Gradient Boosting]
+    end
 
-**Random Forest** and **XGBoost** consistently outperformed the others and were selected for advanced fine-tuning.
+    subgraph Meta-Learner
+        E[Logistic Regression<br>5-fold stacking]
+    end
 
-### 3. Hyperparameter Fine-Tuning
-A multi-layered approach was taken to squeeze the best performance out of the selected models:
-- **RandomizedSearchCV**: Used initially for both Random Forest and XGBoost to broadly explore the hyperparameter space.
-- **GridSearchCV**: Applied to **Random Forest** to exhaustively search a narrowed parameter grid, yielding a robust, normally-distributed ROC-AUC score of ~0.828.
-- **Optuna**: Applied to **XGBoost**. Because XGBoost has a vast, continuous search space that makes Grid Search computationally infeasible, Optuna's Bayesian optimization was utilized, resulting in a slightly higher ROC-AUC of ~0.829.
+    subgraph Prediction
+        F[Dropout / Enrolled / Graduate]
+    end
 
-### 4. Final Selection & Error Analysis
-On the unseen test set, **XGBoost** proved to be the superior model (ROC-AUC: 0.8307, Accuracy: 70.3%, F1-Score: 70.4%). 
-- The model excels at identifying **Graduates** (81% F1) and **Dropouts** (71% F1).
-- Predicting the transitional **Enrolled** state remains the hardest challenge (41% F1), reflecting real-world ambiguity in intermediate academic statuses.
+    A --> E
+    B --> E
+    C --> E
+    D --> E
+    E --> F
+```
 
-The final model pipeline (`final_xgboost_dropout_model.joblib`) natively handles scaling, missing value imputation, label encoding, and prediction.
+### Model Performance
+
+The stacked ensemble approach significantly improves the robustness of the predictions. Below is the performance evaluation of the models on the test set:
+
+| Model | Accuracy | Macro-F1 | ROC-AUC |
+|-------|----------|----------|---------|
+| LASSO | 74.99% | 70.88 | 88.45 |
+| Elastic Net | 74.95% | 70.83 | 88.42 |
+| XGBoost | 77.40% | 72.48 | 88.67 |
+| Gradient Boosting | 77.03% | 72.37 | 88.84 |
+| **Stacked Ensemble** | **77.76%** | **72.10** | **89.04** |
+
+> [!NOTE]
+> **Metric Interpretation:** Accuracy measures overall correct predictions. Macro-F1 gives equal importance to all three classes (vital since "Enrolled" is a minority class). ROC-AUC measures how effectively the model separates the three outcome classes. The Stacked Ensemble yields the highest Accuracy and ROC-AUC.
 
 ---
 
-## 🚀 Running the Interactive UI
+## Running the Interactive UI
 
-An interactive Gradio Web UI has been developed for real-time predictions. The UI focuses on the 12 most predictive features determined during EDA, automatically handling imputations for the rest.
+An interactive Gradio Web UI has been developed for real-time predictions. The UI focuses on the most predictive features, handles input formatting automatically, and explains the models and features in a comprehensive "How It Works" and "Dataset Dictionary" tabs.
 
 ### Local Setup
 Ensure you have Python 3 installed, then run the following:

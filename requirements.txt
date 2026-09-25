@@ -1,10 +1,7 @@
-gradio
-pandas
-numpy
-scikit-learn
-matplotlib
-seaborn
-xgboost
-category_encoders
-joblib
-imbalanced-learn
+gradio==4.36.1
+pandas==2.2.2
+numpy==1.26.4
+scikit-learn==1.4.2
+xgboost==2.0.3
+joblib==1.4.2
+pydantic==2.7.4

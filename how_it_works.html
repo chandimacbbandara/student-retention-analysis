@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>How It Works | Student Outcome Prediction</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --surface: #ffffff;
+            --surface-soft: #f8fafc;
+            --text: #172033;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --green: #059669;
+            --orange: #ea580c;
+            --purple: #7c3aed;
+            --red: #dc2626;
+            --shadow: 0 10px 35px rgba(15, 23, 42, 0.07);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.14), transparent 28%),
+                radial-gradient(circle at 90% 10%, rgba(124, 58, 237, 0.12), transparent 30%),
+                linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            padding: 95px 24px 85px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-container {
+            max-width: 1180px;
+            margin: auto;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 13px;
+            border: 1px solid #dbeafe;
+            background: #eff6ff;
+            color: var(--primary);
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            max-width: 850px;
+            font-size: clamp(42px, 6vw, 72px);
+            line-height: 1.04;
+            letter-spacing: -0.045em;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero-description {
+            max-width: 760px;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.75;
+            margin-bottom: 35px;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            max-width: 900px;
+        }
+
+        .hero-stat {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 18px;
+        }
+
+        .hero-stat strong {
+            display: block;
+            font-size: 25px;
+            letter-spacing: -0.03em;
+        }
+
+        .hero-stat span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* =========================
+           NAV
+        ========================= */
+
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-inner {
+            max-width: 1180px;
+            margin: auto;
+            padding: 13px 24px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+        }
+
+        .nav-inner a {
+            white-space: nowrap;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .nav-inner a:hover {
+            background: #eff6ff;
+            color: var(--primary);
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .container {
+            max-width: 1180px;
+            margin: auto;
+            padding: 80px 24px;
+        }
+
+        .section {
+            margin-bottom: 95px;
+        }
+
+        .section-heading {
+            margin-bottom: 35px;
+        }
+
+        .section-number {
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+        }
+
+        .section-heading h2 {
+            font-size: clamp(30px, 4vw, 43px);
+            letter-spacing: -0.035em;
+            margin-bottom: 10px;
+        }
+
+        .section-heading p {
+            max-width: 760px;
+            color: var(--muted);
+        }
+
+        /* =========================
+           PIPELINE
+        ========================= */
+
+        .pipeline {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+            position: relative;
+        }
+
+        .pipeline-step {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 25px 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .pipeline-step:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            right: -23px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 24px;
+            z-index: 2;
+        }
+
+        .step-number {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .pipeline-step h3 {
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+
+        .pipeline-step p {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        /* =========================
+           MODEL CARDS
+        ========================= */
+
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .model-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 27px;
+            box-shadow: var(--shadow);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .model-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.1);
+        }
+
+        .model-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 17px;
+        }
+
+        .model-header h3 {
+            font-size: 21px;
+        }
+
+        .model-tag {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: #f1f5f9;
+            color: #475569;
+            white-space: nowrap;
+        }
+
+        .model-card p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .mini-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .mini-metric {
+            background: var(--surface-soft);
+            border-radius: 11px;
+            padding: 12px;
+        }
+
+        .mini-metric strong {
+            display: block;
+            font-size: 17px;
+        }
+
+        .mini-metric span {
+            color: var(--muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* =========================
+           PERFORMANCE
+        ========================= */
+
+        .performance-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-card h3 {
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .chart-card > p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 350px;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-container {
+            overflow-x: auto;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 720px;
+        }
+
+        th {
+            text-align: left;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 17px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 18px 20px;
+            border-bottom: 1px solid #eef2f7;
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ensemble-row {
+            background: #eff6ff;
+        }
+
+        .metric-value {
+            font-weight: 750;
+        }
+
+        /* =========================
+           STACKING
+        ========================= */
+
+        .stack-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            align-items: stretch;
+        }
+
+        .stack-diagram {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .base-models {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .base-model {
+            border: 1px solid var(--border);
+            background: var(--surface-soft);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .stack-arrow {
+            text-align: center;
+            color: var(--primary);
+            font-size: 28px;
+            margin: 5px 0;
+        }
+
+        .meta-model {
+            border: 1px solid #bfdbfe;
+            background: #eff6ff;
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .meta-model strong {
+            display: block;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+        }
+
+        .prediction-box {
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+            padding: 18px;
+            margin-top: 12px;
+            text-align: center;
+            background: white;
+        }
+
+        .prediction-box strong {
+            font-size: 18px;
+        }
+
+        .stack-explanation {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .stack-explanation h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .stack-explanation p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            position: relative;
+            padding-left: 22px;
+            margin-bottom: 13px;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .info-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+
+        /* =========================
+           PREDICTION FLOW
+        ========================= */
+
+        .prediction-flow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+
+        .flow-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 23px;
+            box-shadow: var(--shadow);
+        }
+
+        .flow-icon {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            background: #f1f5f9;
+            border-radius: 11px;
+            color: var(--primary);
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .flow-card h3 {
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
+
+        .flow-card p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* =========================
+           PREDICTION UI
+        ========================= */
+
+        .prediction-demo {
+            background: #0f172a;
+            color: white;
+            border-radius: 22px;
+            padding: 35px;
+            overflow: hidden;
+        }
+
+        .prediction-demo-header {
+            margin-bottom: 25px;
+        }
+
+        .prediction-demo-header h3 {
+            font-size: 25px;
+            margin-bottom: 5px;
+        }
+
+        .prediction-demo-header p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .prediction-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-panel {
+            background: #111c31;
+            border: 1px solid #263550;
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+        .input-panel h4 {
+            margin-bottom: 18px;
+            font-size: 15px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #94a3b8;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            background: #0f172a;
+            color: white;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 10px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #60a5fa;
+        }
+
+        .predict-button {
+            width: 100%;
+            margin-top: 17px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            border-radius: 9px;
+            padding: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .predict-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .result-panel {
+            background: #111c31;
+            border: 1px solid #263550;
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+        .result-panel h4 {
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .prediction-result {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .prediction-result small {
+            display: block;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .prediction-result strong {
+            font-size: 30px;
+            color: #60a5fa;
+        }
+
+        .probability {
+            margin-top: 15px;
+        }
+
+        .probability-row {
+            margin-bottom: 13px;
+        }
+
+        .probability-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #cbd5e1;
+            margin-bottom: 5px;
+        }
+
+        .progress {
+            height: 7px;
+            background: #263550;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+        }
+
+        .dropout-bar {
+            width: 22%;
+            background: #60a5fa;
+        }
+
+        .enrolled-bar {
+            width: 14%;
+            background: #fb923c;
+        }
+
+        .graduate-bar {
+            width: 64%;
+            background: #34d399;
+        }
+
+        /* =========================
+           OUTPUT EXPLANATION
+        ========================= */
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .output-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+        .output-card h3 {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .output-card p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* =========================
+           NOTES
+        ========================= */
+
+        .note {
+            margin-top: 20px;
+            padding: 18px 20px;
+            border-radius: 13px;
+            border: 1px solid #dbeafe;
+            background: #eff6ff;
+            color: #334155;
+            font-size: 13px;
+        }
+
+        .note strong {
+            color: var(--primary-dark);
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            border-top: 1px solid var(--border);
+            background: #ffffff;
+            padding: 40px 24px;
+        }
+
+        .footer-inner {
+            max-width: 1180px;
+            margin: auto;
+            color: var(--muted);
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 900px) {
+            .hero-stats,
+            .pipeline,
+            .prediction-flow {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .pipeline-step:not(:last-child)::after {
+                display: none;
+            }
+
+            .performance-layout,
+            .stack-section,
+            .prediction-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .model-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .output-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero {
+                padding: 65px 20px;
+            }
+
+            .container {
+                padding: 60px 20px;
+            }
+
+            .hero-stats,
+            .pipeline,
+            .prediction-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mini-metrics {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+
+            .prediction-demo {
+                padding: 22px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<header class="hero">
+    <div class="hero-container">
+
+        <div class="eyebrow">
+            MACHINE LEARNING PIPELINE
+        </div>
+
+        <h1>
+            How the Student Outcome
+            <span>Prediction System</span>
+            Works
+        </h1>
+
+        <p class="hero-description">
+            The system combines data preprocessing, four complementary
+            machine-learning models and a stacking ensemble to predict a
+            student's academic outcome as Dropout, Enrolled or Graduate.
+            <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-top: 10px;">
+                <a href="https://github.com/chandimacbbandara/student-retention-analysis" target="_blank" style="color: #ffffff; background: #0f172a; padding: 8px 16px; border-radius: 999px; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    GitHub Repository
+                </a>
+                <a href="https://archive.ics.uci.edu/dataset/697/predict+students+dropout+and+academic+success?utm_source=gemini" target="_blank" style="color: var(--primary); font-weight: 600; display: inline-flex; align-items: center; gap: 6px; font-size: 14px;">
+                    View Dataset on UCI Repository
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+            </div>
+        </p>
+
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <strong>4,424</strong>
+                <span>Student records</span>
+            </div>
+
+            <div class="hero-stat">
+                <strong>35</strong>
+                <span>Predictor variables</span>
+            </div>
+
+            <div class="hero-stat">
+                <strong>3</strong>
+                <span>Prediction classes</span>
+            </div>
+
+            <div class="hero-stat">
+                <strong>77.76%</strong>
+                <span>Stacked accuracy</span>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<nav class="sticky-nav">
+    <div class="nav-inner">
+        <a href="#pipeline">Pipeline</a>
+        <a href="#models">Models</a>
+        <a href="#performance">Performance</a>
+        <a href="#stacking">Stacking</a>
+        <a href="#prediction">Prediction</a>
+        <a href="#output">Output</a>
+    </div>
+</nav>
+
+
+<main class="container">
+
+    <!-- =====================================================
+         01 PIPELINE
+    ====================================================== -->
+
+    <section class="section" id="pipeline">
+
+        <div class="section-heading">
+            <div class="section-number">01 — SYSTEM PIPELINE</div>
+
+            <h2>From student data to predicted outcome</h2>
+
+            <p>
+                Every prediction passes through the same structured pipeline.
+                The goal is to transform raw student information into a
+                reliable three-class prediction.
+            </p>
+        </div>
+
+        <div class="pipeline">
+
+            <div class="pipeline-step">
+                <div class="step-number">01</div>
+
+                <h3>Student Input</h3>
+
+                <p>
+                    Academic, demographic, financial and application
+                    information is provided for a student.
+                </p>
+            </div>
+
+            <div class="pipeline-step">
+                <div class="step-number">02</div>
+
+                <h3>Preprocessing</h3>
+
+                <p>
+                    Categorical and numerical variables are transformed
+                    using the trained preprocessing pipeline.
+                </p>
+            </div>
+
+            <div class="pipeline-step">
+                <div class="step-number">03</div>
+
+                <h3>Base Models</h3>
+
+                <p>
+                    Four independently trained models analyse the same
+                    processed student information.
+                </p>
+            </div>
+
+            <div class="pipeline-step">
+                <div class="step-number">04</div>
+
+                <h3>Stacking</h3>
+
+                <p>
+                    The predictions of the four models are combined by a
+                    Logistic Regression meta-learner.
+                </p>
+            </div>
+
+            <div class="pipeline-step">
+                <div class="step-number">05</div>
+
+                <h3>Outcome</h3>
+
+                <p>
+                    The system returns the predicted student outcome and
+                    class probabilities.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         02 MODELS
+    ====================================================== -->
+
+    <section class="section" id="models">
+
+        <div class="section-heading">
+            <div class="section-number">02 — FINAL MODEL ARCHITECTURE</div>
+
+            <h2>Four complementary prediction models</h2>
+
+            <p>
+                The final ensemble combines statistical and tree-based
+                approaches. Each model contributes a different perspective
+                on the student's outcome.
+            </p>
+        </div>
+
+        <div class="model-grid">
+
+            <!-- LASSO -->
+
+            <article class="model-card">
+
+                <div class="model-header">
+                    <h3>LASSO Logistic Regression</h3>
+                    <span class="model-tag">STATISTICAL</span>
+                </div>
+
+                <p>
+                    A regularised multinomial logistic model using L1
+                    regularisation. It provides a linear and interpretable
+                    view of the relationship between predictors and outcomes.
+                </p>
+
+                <div class="mini-metrics">
+                    <div class="mini-metric">
+                        <strong>74.99%</strong>
+                        <span>Accuracy</span>
+                    </div>
+
+                    <div class="mini-metric">
+                        <strong>70.88%</strong>
+                        <span>Macro-F1</span>
+                    </div>
+
+                    <div class="mini-metric">
+                        <strong>88.45%</strong>
+                        <span>ROC-AUC</span>
+                    </div>
+                </div>
+
+            </article>
+
+
+            <!-- ELASTIC NET -->
+
+            <article class="model-card">
+
+                <div class="model-header">
+                    <h3>Elastic Net Logistic Regression</h3>
+                    <span class="model-tag">STATISTICAL</span>
+                </div>
+
+                <p>
+                    Combines L1 and L2 regularisation. This allows the model
+                    to perform feature selection while maintaining stability
+                    when predictors contain correlated information.
+                </p>
+
+                <div class="mini-metrics">
+                    <div class="mini-metric">
+                        <strong>74.95%</strong>
+                        <span>Accuracy</span>
+                    </div>
+
+                    <div class="mini-metric">
+                        <strong>70.83%</strong>
+                        <span>Macro-F1</span>
+                    </div>
+
+                    <div class="mini-metric">
+                        <strong>88.42%</strong>
+                        <span>ROC-AUC</span>
+                    </div>
+                </div>
+
+            </article>
+
+
+            <!-- XGBOOST -->
+
+            <article class="model-card">
+
+                <div class="model-header">
+                    <h3>XGBoost</h3>
+                    <span class="model-tag">GRIDSEARCH TUNED</span>
+                </div>
+
+                <p>
+                    A gradient-boosted decision-tree model capable of learning
+                    nonlinear relationships and interactions between student
+                    characteristics.
+                </p>
+
+                <div class="mini-metrics">
+                    <div class="mini-metric">
+                        <strong>77.40%</strong>
+                        <span>Accuracy</span>
+                    </div>
+
+                    <div class="mini-metric">
+                        <strong>72.48%</strong>
+                        <span>Macro-F1</span>
+                    </div>
+
+                    <div class="mini-metric">
+                        <strong>88.67%</strong>
+                        <span>ROC-AUC</span>
+                    </div>
+                </div>
+
+            </article>
+
+
+            <!-- GRADIENT BOOSTING -->
+
+            <article class="model-card">
+
+                <div class="model-header">
+                    <h3>Gradient Boosting</h3>
+                    <span class="model-tag">GRIDSEARCH TUNED</span>
+                </div>
+
+                <p>
+                    An ensemble of sequential decision trees that learns
+                    increasingly complex patterns from the student data.
+                </p>
+
+                <div class="mini-metrics">
+                    <div class="mini-metric">
+                        <strong>77.03%</strong>
+                        <span>Accuracy</span>
+                    </div>
+
+                    <div class="mini-metric">
+                        <strong>72.37%</strong>
+                        <span>Macro-F1</span>
+                    </div>
+
+                    <div class="mini-metric">
+                        <strong>88.84%</strong>
+                        <span>ROC-AUC</span>
+                    </div>
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         03 PERFORMANCE
+    ====================================================== -->
+
+    <section class="section" id="performance">
+
+        <div class="section-heading">
+            <div class="section-number">03 — MODEL PERFORMANCE</div>
+
+            <h2>Performance on unseen test data</h2>
+
+            <p>
+                The models were evaluated on a held-out test set of 1,106
+                students. Accuracy, Macro-F1 and ROC-AUC are shown together
+                because the target classes are imbalanced.
+            </p>
+        </div>
+
+
+        <div class="performance-layout">
+
+            <div class="chart-card">
+
+                <h3>Final model comparison</h3>
+
+                <p>
+                    Accuracy, Macro-F1 and ROC-AUC on the test set.
+                </p>
+
+                <div class="chart-wrapper">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+
+            </div>
+
+
+            <div class="chart-card">
+
+                <h3>Final accuracy comparison</h3>
+
+                <p>
+                    Test accuracy of the four base models and the stacking
+                    ensemble.
+                </p>
+
+                <div class="chart-wrapper">
+                    <canvas id="accuracyChart"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <br>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Accuracy</th>
+                        <th>Macro-F1</th>
+                        <th>ROC-AUC</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>LASSO Logistic Regression</td>
+                        <td class="metric-value">74.99%</td>
+                        <td>70.88%</td>
+                        <td>88.45%</td>
+                    </tr>
+
+                    <tr>
+                        <td>Elastic Net Logistic Regression</td>
+                        <td class="metric-value">74.95%</td>
+                        <td>70.83%</td>
+                        <td>88.42%</td>
+                    </tr>
+
+                    <tr>
+                        <td>XGBoost — GridSearch</td>
+                        <td class="metric-value">77.40%</td>
+                        <td>72.48%</td>
+                        <td>88.67%</td>
+                    </tr>
+
+                    <tr>
+                        <td>Gradient Boosting — GridSearch</td>
+                        <td class="metric-value">77.03%</td>
+                        <td>72.37%</td>
+                        <td>88.84%</td>
+                    </tr>
+
+                    <tr class="ensemble-row">
+                        <td><strong>Stacked Ensemble</strong></td>
+                        <td class="metric-value"><strong>77.76%</strong></td>
+                        <td><strong>72.10%</strong></td>
+                        <td><strong>89.04%</strong></td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="note">
+            <strong>Metric interpretation:</strong>
+            Accuracy measures overall correct predictions. Macro-F1 gives
+            equal importance to all three classes, which is particularly
+            important because the dataset contains fewer Enrolled students.
+            ROC-AUC measures how effectively the model separates the three
+            outcome classes using predicted probabilities.
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         04 STACKING
+    ====================================================== -->
+
+    <section class="section" id="stacking">
+
+        <div class="section-heading">
+            <div class="section-number">04 — STACKED ENSEMBLE</div>
+
+            <h2>How the final ensemble makes a prediction</h2>
+
+            <p>
+                Instead of relying on one algorithm, the stacking architecture
+                allows four different models to produce predictions that are
+                then combined by a final Logistic Regression meta-learner.
+            </p>
+        </div>
+
+
+        <div class="stack-section">
+
+            <div class="stack-diagram">
+
+                <h3>Ensemble architecture</h3>
+
+                <div class="base-models">
+
+                    <div class="base-model">
+                        LASSO
+                    </div>
+
+                    <div class="base-model">
+                        Elastic Net
+                    </div>
+
+                    <div class="base-model">
+                        XGBoost
+                    </div>
+
+                    <div class="base-model">
+                        Gradient Boosting
+                    </div>
+
+                </div>
+
+                <div class="stack-arrow">
+                    ↓
+                </div>
+
+                <div class="meta-model">
+
+                    <strong>Meta-Learner</strong>
+
+                    Logistic Regression
+
+                    <small>
+                        5-fold stacking
+                    </small>
+
+                </div>
+
+                <div class="stack-arrow">
+                    ↓
+                </div>
+
+                <div class="prediction-box">
+
+                    <small>FINAL PREDICTION</small>
+
+                    <br>
+
+                    <strong>
+                        Dropout / Enrolled / Graduate
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="stack-explanation">
+
+                <h3>Why use stacking?</h3>
+
+                <p>
+                    The four base models learn different patterns from the
+                    same student data. Stacking allows a second-level model
+                    to learn how to combine their outputs.
+                </p>
+
+                <ul class="info-list">
+
+                    <li>
+                        LASSO contributes a sparse, regularised linear view.
+                    </li>
+
+                    <li>
+                        Elastic Net provides a second regularised statistical
+                        perspective.
+                    </li>
+
+                    <li>
+                        XGBoost captures nonlinear relationships and feature
+                        interactions.
+                    </li>
+
+                    <li>
+                        Gradient Boosting provides another tree-based view of
+                        the student's characteristics.
+                    </li>
+
+                    <li>
+                        The Logistic Regression meta-learner combines these
+                        model outputs into the final prediction.
+                    </li>
+
+                    <li>
+                        The ensemble achieved 77.76% test accuracy and
+                        89.04% ROC-AUC.
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+
+        <br>
+
+
+        <div class="chart-card">
+
+            <h3>Base models vs stacked ensemble</h3>
+
+            <p>
+                Comparison of the final ensemble against the four models
+                used as its inputs.
+            </p>
+
+            <div class="chart-wrapper">
+                <canvas id="stackChart"></canvas>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         05 PREDICTION FLOW
+    ====================================================== -->
+
+    <section class="section" id="prediction">
+
+        <div class="section-heading">
+
+            <div class="section-number">05 — MAKING A PREDICTION</div>
+
+            <h2>What happens when a user enters student information?</h2>
+
+            <p>
+                The prediction process begins when the user submits a student's
+                information. The trained model then processes the same type of
+                information used during model development.
+            </p>
+
+        </div>
+
+
+        <div class="prediction-flow">
+
+            <div class="flow-card">
+
+                <div class="flow-icon">01</div>
+
+                <h3>User Input</h3>
+
+                <p>
+                    The user enters the student's demographic, academic,
+                    financial and application information.
+                </p>
+
+            </div>
+
+
+            <div class="flow-card">
+
+                <div class="flow-icon">02</div>
+
+                <h3>Preprocessing</h3>
+
+                <p>
+                    The saved preprocessing pipeline converts the raw values
+                    into the representation expected by the models.
+                </p>
+
+            </div>
+
+
+            <div class="flow-card">
+
+                <div class="flow-icon">03</div>
+
+                <h3>Model Inference</h3>
+
+                <p>
+                    The four base models generate predictions and probability
+                    estimates for the student.
+                </p>
+
+            </div>
+
+
+            <div class="flow-card">
+
+                <div class="flow-icon">04</div>
+
+                <h3>Final Output</h3>
+
+                <p>
+                    The stacking meta-learner combines the model outputs and
+                    returns the final predicted outcome.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+
+    </section>
+
+
+    <!-- =====================================================
+         06 OUTPUT
+    ====================================================== -->
+
+    <section class="section" id="output">
+
+        <div class="section-heading">
+
+            <div class="section-number">06 — UNDERSTANDING THE OUTPUT</div>
+
+            <h2>What does the prediction mean?</h2>
+
+            <p>
+                The system produces one of three academic outcome classes.
+                The probability distribution provides additional context
+                about the model's prediction.
+            </p>
+
+        </div>
+
+
+        <div class="output-grid">
+
+            <div class="output-card">
+
+                <h3>Dropout</h3>
+
+                <p>
+                    The model predicts that the student's observed
+                    characteristics are more consistent with the Dropout
+                    class.
+                </p>
+
+            </div>
+
+
+            <div class="output-card">
+
+                <h3>Enrolled</h3>
+
+                <p>
+                    The model predicts that the student is more consistent
+                    with the Enrolled class at the prediction point.
+                </p>
+
+            </div>
+
+
+            <div class="output-card">
+
+                <h3>Graduate</h3>
+
+                <p>
+                    The model predicts that the student's observed
+                    characteristics are more consistent with the Graduate
+                    class.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="note">
+
+            <strong>Important:</strong>
+            The predicted probability is a model estimate, not a guarantee
+            of a student's future outcome. The Enrolled class is especially
+            difficult because it represents students whose eventual outcome
+            has not yet been observed at the prediction point.
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <div class="footer-inner">
+
+        <div>
+            Student Outcome Prediction System
+        </div>
+
+        <div style="display: flex; gap: 16px; align-items: center;">
+            <span>Machine Learning Pipeline · Stacked Ensemble</span>
+            ·
+            <a href="https://github.com/chandimacbbandara/student-retention-analysis" target="_blank" style="color: var(--primary); font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                GitHub Repo
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- =========================================================
+     CHARTS
+========================================================= -->
+
+<script>
+
+    /*
+     * FINAL MODEL DATA
+     * Taken from the final evaluation in the modelling notebook.
+     */
+
+    const modelNames = [
+        "LASSO",
+        "Elastic Net",
+        "XGBoost",
+        "Gradient Boosting",
+        "Stacked Ensemble"
+    ];
+
+    const accuracy = [
+        74.99,
+        74.95,
+        77.40,
+        77.03,
+        77.76
+    ];
+
+    const macroF1 = [
+        70.88,
+        70.83,
+        72.48,
+        72.37,
+        72.10
+    ];
+
+    const rocAuc = [
+        88.45,
+        88.42,
+        88.67,
+        88.84,
+        89.04
+    ];
+
+
+    /*
+     * MAIN PERFORMANCE CHART
+     */
+
+    new Chart(
+        document.getElementById("performanceChart"),
+        {
+            type: "bar",
+
+            data: {
+                labels: modelNames,
+
+                datasets: [
+
+                    {
+                        label: "Accuracy",
+                        data: accuracy
+                    },
+
+                    {
+                        label: "Macro-F1",
+                        data: macroF1
+                    },
+
+                    {
+                        label: "ROC-AUC",
+                        data: rocAuc
+                    }
+
+                ]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        position: "bottom"
+                    },
+
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label +
+                                    ": " +
+                                    context.parsed.y.toFixed(2) +
+                                    "%";
+                            }
+                        }
+                    }
+
+                },
+
+                scales: {
+
+                    y: {
+                        min: 60,
+                        max: 100,
+
+                        ticks: {
+                            callback: function(value) {
+                                return value + "%";
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
+    );
+
+
+    /*
+     * ACCURACY CHART
+     */
+
+    new Chart(
+        document.getElementById("accuracyChart"),
+        {
+            type: "line",
+
+            data: {
+
+                labels: modelNames,
+
+                datasets: [
+
+                    {
+                        label: "Test Accuracy",
+                        data: accuracy,
+                        tension: 0.35,
+                        fill: false,
+                        pointRadius: 5,
+                        pointHoverRadius: 8
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+
+                        callbacks: {
+
+                            label: function(context) {
+
+                                return (
+                                    "Accuracy: " +
+                                    context.parsed.y.toFixed(2) +
+                                    "%"
+                                );
+
+                            }
+
+                        }
+
+                    }
+
+                },
+
+                scales: {
+
+                    y: {
+
+                        min: 72,
+                        max: 80,
+
+                        ticks: {
+
+                            callback: function(value) {
+
+                                return value + "%";
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /*
+     * STACKING COMPARISON
+     */
+
+    new Chart(
+        document.getElementById("stackChart"),
+        {
+            type: "bar",
+
+            data: {
+
+                labels: modelNames,
+
+                datasets: [
+
+                    {
+                        label: "Accuracy",
+                        data: accuracy
+                    },
+
+                    {
+                        label: "Macro-F1",
+                        data: macroF1
+                    },
+
+                    {
+                        label: "ROC-AUC",
+                        data: rocAuc
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        position: "bottom"
+                    }
+
+                },
+
+                scales: {
+
+                    y: {
+
+                        min: 65,
+                        max: 95,
+
+                        ticks: {
+
+                            callback: function(value) {
+
+                                return value + "%";
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /*
+     * DEMONSTRATION PREDICTION
+     *
+     * This is a frontend demonstration only.
+     *
+     * Replace this function with a fetch() call to your
+     * real Flask/FastAPI/Node backend.
+     */
+
+    function runDemoPrediction() {
+
+        const sem1Enrolled =
+            Number(document.getElementById("sem1Enrolled").value);
+
+        const sem1Approved =
+            Number(document.getElementById("sem1Approved").value);
+
+        const sem2Enrolled =
+            Number(document.getElementById("sem2Enrolled").value);
+
+        const sem2Approved =
+            Number(document.getElementById("sem2Approved").value);
+
+        const sem1Grade =
+            Number(document.getElementById("sem1Grade").value);
+
+        const sem2Grade =
+            Number(document.getElementById("sem2Grade").value);
+
+        /*
+         * Demo-only logic.
+         *
+         * This DOES NOT replace the trained ML model.
+         * It simply demonstrates how the UI can react to input.
+         */
+
+        const totalEnrolled =
+            sem1Enrolled + sem2Enrolled;
+
+        const totalApproved =
+            sem1Approved + sem2Approved;
+
+        const approvalRate =
+            totalEnrolled > 0
+                ? totalApproved / totalEnrolled
+                : 0;
+
+        const averageGrade =
+            (sem1Grade + sem2Grade) / 2;
+
+
+        let dropout = 20;
+        let enrolled = 15;
+        let graduate = 65;
+
+
+        if (approvalRate < 0.45) {
+
+            dropout += 25;
+            graduate -= 20;
+            enrolled -= 5;
+
+        }
+
+        if (approvalRate > 0.75) {
+
+            graduate += 15;
+            dropout -= 10;
+            enrolled -= 5;
+
+        }
+
+        if (averageGrade < 10) {
+
+            dropout += 10;
+            graduate -= 8;
+            enrolled -= 2;
+
+        }
+
+        if (averageGrade > 14) {
+
+            graduate += 8;
+            dropout -= 5;
+            enrolled -= 3;
+
+        }
+
+
+        /*
+         * Keep values inside 0–100.
+         */
+
+        dropout = Math.max(1, dropout);
+        enrolled = Math.max(1, enrolled);
+        graduate = Math.max(1, graduate);
+
+
+        /*
+         * Normalise probabilities.
+         */
+
+        const total =
+            dropout +
+            enrolled +
+            graduate;
+
+        dropout =
+            Math.round((dropout / total) * 100);
+
+        enrolled =
+            Math.round((enrolled / total) * 100);
+
+        graduate =
+            100 -
+            dropout -
+            enrolled;
+
+
+        /*
+         * Determine demo prediction.
+         */
+
+        let prediction = "Graduate";
+
+        if (
+            dropout >= enrolled &&
+            dropout >= graduate
+        ) {
+
+            prediction = "Dropout";
+
+        } else if (
+            enrolled >= dropout &&
+            enrolled >= graduate
+        ) {
+
+            prediction = "Enrolled";
+
+        }
+
+
+        /*
+         * Update UI.
+         */
+
+        document.getElementById(
+            "predictionText"
+        ).textContent = prediction;
+
+
+        document.getElementById(
+            "dropoutValue"
+        ).textContent = dropout + "%";
+
+
+        document.getElementById(
+            "enrolledValue"
+        ).textContent = enrolled + "%";
+
+
+        document.getElementById(
+            "graduateValue"
+        ).textContent = graduate + "%";
+
+
+        document.getElementById(
+            "dropoutProgress"
+        ).style.width = dropout + "%";
+
+
+        document.getElementById(
+            "enrolledProgress"
+        ).style.width = enrolled + "%";
+
+
+        document.getElementById(
+            "graduateProgress"
+        ).style.width = graduate + "%";
+
+    }
+
+</script>
+
+</body>
+</html>
