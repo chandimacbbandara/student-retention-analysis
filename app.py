@@ -285,6 +285,8 @@ with gr.Blocks(theme=custom_theme, css=custom_css, js=js_func) as app:
                 if m == "final_stacked_ensemble_model": display_name += " (Best Choice)"
                 model_choices.append((display_name, m))
                 
+            if not model_choices:
+                raise RuntimeError("No machine learning models were loaded successfully. Check dependencies in requirements.txt.")
             default_model = model_choices[-1][1]
             selected_model = gr.Dropdown(choices=model_choices, value=default_model, label="Select Prediction Model", elem_id="model-select")
             
