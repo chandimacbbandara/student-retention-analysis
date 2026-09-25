@@ -6,6 +6,15 @@ import numpy as np
 import gradio as gr
 import random
 
+# HF ZeroGPU compatibility fix
+try:
+    import spaces
+    @spaces.GPU
+    def _hf_spaces_gpu_init():
+        pass
+except Exception:
+    pass
+
 # Patch for older sklearn versions (solves _RemainderColsList loading issue)
 import sklearn.compose._column_transformer
 class _RemainderColsList(list):
