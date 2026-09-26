@@ -257,7 +257,7 @@ body, html {
     color: #0f172a !important;
 }
 
-h1, h2, h3, .hero-title {
+h1, h2, h3, .hero-title, .section-header {
     font-family: 'Outfit', sans-serif !important;
 }
 
@@ -285,9 +285,7 @@ h1, h2, h3, .hero-title {
 }
 
 .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    display: inline-block;
     background: rgba(99, 102, 241, 0.2);
     border: 1px solid rgba(165, 180, 252, 0.3);
     color: #a5b4fc;
@@ -329,19 +327,12 @@ h1, h2, h3, .hero-title {
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 14px;
     padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
     transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .kpi-card:hover {
     transform: translateY(-2px);
     background: rgba(255, 255, 255, 0.12);
-}
-
-.kpi-icon {
-    font-size: 1.5rem;
 }
 
 .kpi-val {
@@ -368,7 +359,7 @@ h1, h2, h3, .hero-title {
     border-radius: 16px !important;
     padding: 20px 24px !important;
     box-shadow: 0 10px 25px rgba(15, 23, 42, 0.03) !important;
-    margin-bottom: 20px !important;
+    margin-bottom: 24px !important;
 }
 
 #model-select {
@@ -408,7 +399,7 @@ h1, h2, h3, .hero-title {
     border-radius: 12px !important;
     box-shadow: 0 8px 24px rgba(37, 99, 235, 0.28) !important;
     transition: all 0.25s ease !important;
-    margin-top: 16px !important;
+    margin-top: 24px !important;
 }
 
 #predict-btn:hover {
@@ -416,31 +407,24 @@ h1, h2, h3, .hero-title {
     box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4) !important;
 }
 
-/* Category Card Headers */
-.category-box {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 20px 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.03);
+/* Feature Section Card Breakdown */
+.section-card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    padding: 24px !important;
+    margin-bottom: 24px !important;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.03) !important;
 }
 
-.category-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.15rem;
+.section-header {
+    font-size: 1.2rem;
     font-weight: 700;
     color: #1e293b;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
     padding-bottom: 10px;
     border-bottom: 2px solid #f1f5f9;
-}
-
-.category-title span {
-    font-size: 1.3rem;
+    letter-spacing: -0.01em;
 }
 
 /* Form Controls */
@@ -476,7 +460,7 @@ with gr.Blocks(theme=custom_theme, css=custom_css, js=js_func) as app:
     # Custom Dashboard Header
     gr.HTML("""
     <div class="custom-hero">
-        <div class="hero-badge">✨ Multi-Model Stacking Ensemble AI</div>
+        <div class="hero-badge">Multi-Model Stacking Ensemble AI</div>
         <h1 class="hero-title">Student Retention Analytics & Prediction</h1>
         <div class="hero-subtitle">
             An advanced machine learning framework analyzing academic performance, socioeconomics, and student background to classify retention outcomes (Graduate, Enrolled, or Dropout).
@@ -484,28 +468,24 @@ with gr.Blocks(theme=custom_theme, css=custom_css, js=js_func) as app:
         
         <div class="kpi-grid">
             <div class="kpi-card">
-                <span class="kpi-icon">⚡</span>
                 <div>
                     <span class="kpi-val">89.04%</span>
                     <span class="kpi-lbl">Stacked ROC-AUC</span>
                 </div>
             </div>
             <div class="kpi-card">
-                <span class="kpi-icon">🎯</span>
                 <div>
                     <span class="kpi-val">77.76%</span>
                     <span class="kpi-lbl">Accuracy Score</span>
                 </div>
             </div>
             <div class="kpi-card">
-                <span class="kpi-icon">🤖</span>
                 <div>
                     <span class="kpi-val">5 Models</span>
                     <span class="kpi-lbl">Tuned Algorithms</span>
                 </div>
             </div>
             <div class="kpi-card">
-                <span class="kpi-icon">📊</span>
                 <div>
                     <span class="kpi-val">4,424</span>
                     <span class="kpi-lbl">Dataset Records</span>
@@ -516,12 +496,12 @@ with gr.Blocks(theme=custom_theme, css=custom_css, js=js_func) as app:
     """)
     
     with gr.Tabs():
-        with gr.Tab("🎯 Prediction Engine"):
+        with gr.Tab("Prediction Engine"):
             
             model_choices = []
             for m in models_cache.keys():
                 display_name = format_name(m)
-                if m == "final_stacked_ensemble_model": display_name += " ★ (Best Performance)"
+                if m == "final_stacked_ensemble_model": display_name += " (Best Performance)"
                 model_choices.append((display_name, m))
                 
             if not model_choices:
@@ -537,9 +517,7 @@ with gr.Blocks(theme=custom_theme, css=custom_css, js=js_func) as app:
                         elem_id="model-select",
                         scale=3
                     )
-                    random_btn = gr.Button("🎲 Auto-Fill Random Profile", elem_id="random-fill-btn", scale=1)
-            
-            gr.Markdown("#### Fill in student parameters across the categories below to generate outcome predictions:")
+                    random_btn = gr.Button("Auto-Fill Random Profile", elem_id="random-fill-btn", scale=1)
             
             # Map features to categories maintaining exact order in all_features
             academic_feats = [f for f in all_features if get_feature_category(f) == 'academic']
@@ -549,67 +527,74 @@ with gr.Blocks(theme=custom_theme, css=custom_css, js=js_func) as app:
             
             feature_comp_map = {}
             
-            with gr.Tabs():
-                with gr.Tab("📘 Academic Performance (1st & 2nd Sem)"):
-                    with gr.Row():
-                        cols = [gr.Column() for _ in range(3)]
-                        for idx, feat in enumerate(academic_feats):
-                            with cols[idx % 3]:
-                                opts = get_options(feat)
-                                is_vis = feat in model_features[default_model]
-                                info_txt = get_info(feat)
-                                if opts:
-                                    comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
-                                else:
-                                    comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
-                                feature_comp_map[feat] = comp
+            # Section 1: Academic Performance
+            with gr.Column(elem_classes=["section-card"]):
+                gr.HTML("<div class='section-header'>Academic Performance (1st & 2nd Semester)</div>")
+                with gr.Row():
+                    cols = [gr.Column() for _ in range(3)]
+                    for idx, feat in enumerate(academic_feats):
+                        with cols[idx % 3]:
+                            opts = get_options(feat)
+                            is_vis = feat in model_features[default_model]
+                            info_txt = get_info(feat)
+                            if opts:
+                                comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
+                            else:
+                                comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
+                            feature_comp_map[feat] = comp
 
-                with gr.Tab("👤 Demographics & Family Background"):
-                    with gr.Row():
-                        cols = [gr.Column() for _ in range(3)]
-                        for idx, feat in enumerate(demographic_feats):
-                            with cols[idx % 3]:
-                                opts = get_options(feat)
-                                is_vis = feat in model_features[default_model]
-                                info_txt = get_info(feat)
-                                if opts:
-                                    comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
-                                else:
-                                    comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
-                                feature_comp_map[feat] = comp
+            # Section 2: Demographics & Background
+            with gr.Column(elem_classes=["section-card"]):
+                gr.HTML("<div class='section-header'>Demographics & Family Background</div>")
+                with gr.Row():
+                    cols = [gr.Column() for _ in range(3)]
+                    for idx, feat in enumerate(demographic_feats):
+                        with cols[idx % 3]:
+                            opts = get_options(feat)
+                            is_vis = feat in model_features[default_model]
+                            info_txt = get_info(feat)
+                            if opts:
+                                comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
+                            else:
+                                comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
+                            feature_comp_map[feat] = comp
 
-                with gr.Tab("📝 Application & Prior Qualifications"):
-                    with gr.Row():
-                        cols = [gr.Column() for _ in range(3)]
-                        for idx, feat in enumerate(application_feats):
-                            with cols[idx % 3]:
-                                opts = get_options(feat)
-                                is_vis = feat in model_features[default_model]
-                                info_txt = get_info(feat)
-                                if opts:
-                                    comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
-                                else:
-                                    comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
-                                feature_comp_map[feat] = comp
+            # Section 3: Application & Prior Qualifications
+            with gr.Column(elem_classes=["section-card"]):
+                gr.HTML("<div class='section-header'>Application & Prior Qualifications</div>")
+                with gr.Row():
+                    cols = [gr.Column() for _ in range(3)]
+                    for idx, feat in enumerate(application_feats):
+                        with cols[idx % 3]:
+                            opts = get_options(feat)
+                            is_vis = feat in model_features[default_model]
+                            info_txt = get_info(feat)
+                            if opts:
+                                comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
+                            else:
+                                comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
+                            feature_comp_map[feat] = comp
 
-                with gr.Tab("💳 Financial & Macroeconomic Indicators"):
-                    with gr.Row():
-                        cols = [gr.Column() for _ in range(3)]
-                        for idx, feat in enumerate(financial_feats):
-                            with cols[idx % 3]:
-                                opts = get_options(feat)
-                                is_vis = feat in model_features[default_model]
-                                info_txt = get_info(feat)
-                                if opts:
-                                    comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
-                                else:
-                                    comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
-                                feature_comp_map[feat] = comp
+            # Section 4: Financial & Macroeconomic Indicators
+            with gr.Column(elem_classes=["section-card"]):
+                gr.HTML("<div class='section-header'>Financial & Macroeconomic Indicators</div>")
+                with gr.Row():
+                    cols = [gr.Column() for _ in range(3)]
+                    for idx, feat in enumerate(financial_feats):
+                        with cols[idx % 3]:
+                            opts = get_options(feat)
+                            is_vis = feat in model_features[default_model]
+                            info_txt = get_info(feat)
+                            if opts:
+                                comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
+                            else:
+                                comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
+                            feature_comp_map[feat] = comp
 
             # Re-construct input_components in EXACT order of all_features
             input_components = [feature_comp_map[f] for f in all_features]
 
-            submit_btn = gr.Button("⚡ Run Retention Prediction Engine", variant="primary", elem_id="predict-btn")
+            submit_btn = gr.Button("Run Retention Prediction Engine", variant="primary", elem_id="predict-btn")
             output_label = gr.Label(num_top_classes=3, label="Predicted Outcome Probabilities")
             
             def update_visibility(model_name):
@@ -621,7 +606,7 @@ with gr.Blocks(theme=custom_theme, css=custom_css, js=js_func) as app:
             random_btn.click(fn=randomize, inputs=input_components, outputs=input_components)
             submit_btn.click(fn=predict, inputs=[selected_model] + input_components, outputs=output_label)
 
-        with gr.Tab("💡 How It Works & Architecture"):
+        with gr.Tab("How It Works & Architecture"):
             with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "how_it_works.html"), "r", encoding="utf-8") as f:
                 html_content = f.read()
             import base64
@@ -629,7 +614,7 @@ with gr.Blocks(theme=custom_theme, css=custom_css, js=js_func) as app:
             iframe_code = f'<iframe src="data:text/html;base64,{encoded_html}" width="100%" style="height: 88vh; border: none; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.06);"></iframe>'
             gr.HTML(value=iframe_code)
 
-        with gr.Tab("📖 Dataset Dictionary & Feature Docs"):
+        with gr.Tab("Dataset Dictionary & Feature Docs"):
             with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "dataset_dictionary.md"), "r", encoding="utf-8") as f:
                 dict_content = f.read()
             with gr.Column(elem_id="dict-tab"):
