@@ -1371,7 +1371,7 @@
                     Logistic Regression
 
                     <small>
-                        5-fold stacking
+                        5-Fold Cross-Validation Stacking (cv=5)
                     </small>
 
                 </div>
@@ -1401,8 +1401,8 @@
 
                 <p>
                     The four base models learn different patterns from the
-                    same student data. Stacking allows a second-level model
-                    to learn how to combine their outputs.
+                    same student data. Stacking allows a second-level Logistic Regression
+                    meta-learner to learn how to optimally combine their predictions.
                 </p>
 
                 <ul class="info-list">
@@ -1427,8 +1427,12 @@
                     </li>
 
                     <li>
+                        5-Fold Cross-Validation (cv=5) is used during stacking to generate out-of-fold meta-features and prevent data leakage.
+                    </li>
+
+                    <li>
                         The Logistic Regression meta-learner combines these
-                        model outputs into the final prediction.
+                        4 model outputs into the final prediction.
                     </li>
 
                     <li>
