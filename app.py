@@ -76,7 +76,6 @@ for feats in model_features.values():
     all_features.update(feats)
 all_features = sorted(list(all_features))
 
-# Helper to format names
 def format_name(name):
     return name.replace("_", " ").title()
 
@@ -116,11 +115,10 @@ OCCUPATIONS = [
     ("Meal preparation assistants", 194), ("Street vendors/providers", 195)
 ]
 
-# Options mapping for categorical variables
 def get_options(name):
     lower = name.lower()
     if 'gender' in lower: return [("Male", 0), ("Female", 1)]
-    if any(k in lower for k in ['debtor', 'tuition', 'scholarship', 'displaced', 'international', 'special needs']): 
+    if any(k in lower for k in ['debtor', 'tuition', 'scholarship', 'displaced', 'international', 'special needs', 'zero_approved']): 
         return [("No", 0), ("Yes", 1)]
     if 'attendance' in lower: return [("Evening", 0), ("Daytime", 1)]
     if 'marital' in lower: return [("Single", 1), ("Married", 2), ("Widower", 3), ("Divorced", 4), ("Common-law", 5), ("Legally separated", 6)]
@@ -150,47 +148,44 @@ def get_info(name):
     if 'gender' in lower: return "Student's gender"
     if 'nationality' in lower: return "Student's nationality"
     if 'marital' in lower: return "Student's marital status"
-    if 'displaced' in lower: return "Whether the student moved from their hometown to study"
-    if 'international' in lower: return "Whether the student is international"
-    if 'special needs' in lower: return "Whether the student has special educational needs"
-    if 'mother' in lower and 'qualification' in lower: return "Highest education level of the mother"
-    if 'father' in lower and 'qualification' in lower: return "Highest education level of the father"
-    if 'mother' in lower and 'occupation' in lower: return "Profession of the mother"
-    if 'father' in lower and 'occupation' in lower: return "Profession of the father"
-    if 'course' in lower: return "Undergraduate degree program the student is enrolled in"
-    if 'application mode' in lower: return "Method or quota used by the student to apply"
-    if 'application order' in lower: return "Preference order of this course (between 0 - first choice; and 9 - last choice)"
-    if 'previous qualification' in lower and 'grade' not in lower: return "Education level obtained prior to enrollment"
-    if 'previous qualification' in lower and 'grade' in lower: return "Grade of previous qualification (between 0 and 200)"
-    if 'admission grade' in lower: return "Admission grade (between 0 and 200)"
-    if 'attendance' in lower: return "Whether the student attends daytime or evening classes"
-    if 'debtor' in lower: return "Whether the student has outstanding debts to the institution"
-    if 'tuition' in lower: return "Whether the student's tuition fees are up to date"
-    if 'scholarship' in lower: return "Whether the student is a scholarship holder"
-    if '1st sem' in lower and 'credited' in lower: return "Number of 1st semester curricular units credited"
-    if '1st sem' in lower and 'enrolled' in lower: return "Number of 1st semester curricular units enrolled"
-    if '1st sem' in lower and 'evaluations' in lower: return "Number of 1st semester evaluations"
-    if '1st sem' in lower and 'approved' in lower: return "Number of 1st semester curricular units approved"
-    if '1st sem' in lower and 'grade' in lower: return "Average grade in 1st semester (between 0 and 20)"
-    if '1st sem' in lower and 'without' in lower: return "Number of 1st semester curricular units without evaluations"
-    if '2nd sem' in lower and 'credited' in lower: return "Number of 2nd semester curricular units credited"
-    if '2nd sem' in lower and 'enrolled' in lower: return "Number of 2nd semester curricular units enrolled"
-    if '2nd sem' in lower and 'evaluations' in lower: return "Number of 2nd semester evaluations"
-    if '2nd sem' in lower and 'approved' in lower: return "Number of 2nd semester curricular units approved"
-    if '2nd sem' in lower and 'grade' in lower: return "Average grade in 2nd semester (between 0 and 20)"
-    if '2nd sem' in lower and 'without' in lower: return "Number of 2nd semester curricular units without evaluations"
-    if 'unemployment' in lower: return "National unemployment rate at the time of enrollment"
-    if 'inflation' in lower: return "National inflation rate at the time of enrollment"
-    if 'gdp' in lower: return "National GDP growth at the time of enrollment"
-    if 'approval' in lower and 'rate' in lower: return "Engineered: Percentage of enrolled units approved"
-    if 'trend' in lower or 'risk' in lower: return "Engineered feature metric"
+    if 'displaced' in lower: return "Whether student moved from hometown"
+    if 'international' in lower: return "Whether student is international"
+    if 'special needs' in lower: return "Whether student has special needs"
+    if 'mother' in lower and 'qualification' in lower: return "Mother's highest education"
+    if 'father' in lower and 'qualification' in lower: return "Father's highest education"
+    if 'mother' in lower and 'occupation' in lower: return "Mother's profession"
+    if 'father' in lower and 'occupation' in lower: return "Father's profession"
+    if 'course' in lower: return "Degree program enrolled in"
+    if 'application mode' in lower: return "Method used to apply"
+    if 'application order' in lower: return "Preference order (0-9)"
+    if 'previous qualification' in lower and 'grade' not in lower: return "Prior education level"
+    if 'previous qualification' in lower and 'grade' in lower: return "Prior qualification grade (0-200)"
+    if 'admission grade' in lower: return "Admission grade (0-200)"
+    if 'attendance' in lower: return "Daytime or evening classes"
+    if 'debtor' in lower: return "Outstanding debt status"
+    if 'tuition' in lower: return "Tuition fees up to date"
+    if 'scholarship' in lower: return "Scholarship recipient"
+    if '1st sem' in lower and 'credited' in lower: return "1st sem units credited"
+    if '1st sem' in lower and 'enrolled' in lower: return "1st sem units enrolled"
+    if '1st sem' in lower and 'evaluations' in lower: return "1st sem evaluations count"
+    if '1st sem' in lower and 'approved' in lower: return "1st sem units approved"
+    if '1st sem' in lower and 'grade' in lower: return "1st sem average grade (0-20)"
+    if '1st sem' in lower and 'without' in lower: return "1st sem units without evaluations"
+    if '2nd sem' in lower and 'credited' in lower: return "2nd sem units credited"
+    if '2nd sem' in lower and 'enrolled' in lower: return "2nd sem units enrolled"
+    if '2nd sem' in lower and 'evaluations' in lower: return "2nd sem evaluations count"
+    if '2nd sem' in lower and 'approved' in lower: return "2nd sem units approved"
+    if '2nd sem' in lower and 'grade' in lower: return "2nd sem average grade (0-20)"
+    if '2nd sem' in lower and 'without' in lower: return "2nd sem units without evaluations"
+    if 'unemployment' in lower: return "Unemployment rate at enrollment"
+    if 'inflation' in lower: return "Inflation rate at enrollment"
+    if 'gdp' in lower: return "GDP growth at enrollment"
+    if 'approval' in lower and 'rate' in lower: return "Percentage of enrolled units approved"
+    if 'trend' in lower or 'risk' in lower: return "Engineered performance indicator"
     return "Student attribute"
 
 def predict(model_name, *args):
-    # args is a tuple corresponding to all_features
     inputs = {f: v for f, v in zip(all_features, args)}
-    
-    # Get required features
     req_features = model_features[model_name]
     row = {f: inputs.get(f, 0.0) for f in req_features}
     
@@ -199,8 +194,6 @@ def predict(model_name, *args):
     
     proba = pipeline.predict_proba(df)[0]
     classes = label_encoder.classes_
-    
-    # Gradio expects a dictionary of {class_name: probability} for Label output
     return {str(cls): float(p) for cls, p in zip(classes, proba)}
 
 def randomize(*args):
@@ -208,19 +201,17 @@ def randomize(*args):
     for f in all_features:
         opts = get_options(f)
         if opts:
-            # Pick random option value
             vals.append(random.choice(opts)[1])
         else:
             lower = f.lower()
-            if 'age' in lower: vals.append(random.randint(18, 47))
-            elif 'grade' in lower: vals.append(round(random.uniform(10, 20), 1))
-            elif any(k in lower for k in ['rate', 'gdp', 'inflation']): vals.append(round(random.uniform(-2, 8), 1))
-            elif any(k in lower for k in ['evaluations', 'enrolled', 'approved', 'credited']): vals.append(random.randint(0, 14))
-            elif any(k in lower for k in ['trend', 'risk', 'mean']): vals.append(round(random.uniform(0, 5), 2))
+            if 'age' in lower: vals.append(random.randint(18, 45))
+            elif 'grade' in lower: vals.append(round(random.uniform(11, 18), 1))
+            elif any(k in lower for k in ['rate', 'gdp', 'inflation']): vals.append(round(random.uniform(-1.5, 5.0), 1))
+            elif any(k in lower for k in ['evaluations', 'enrolled', 'approved', 'credited']): vals.append(random.randint(2, 10))
+            elif any(k in lower for k in ['trend', 'risk', 'mean']): vals.append(round(random.uniform(0.1, 4.0), 2))
             else: vals.append(round(random.uniform(0, 10), 1))
     return vals
 
-# Force light mode for the whole page
 js_func = """
 function refresh() {
     const url = new URL(window.location);
@@ -232,94 +223,394 @@ function refresh() {
 """
 
 custom_theme = gr.themes.Base(
-    primary_hue="blue",
+    primary_hue="indigo",
     secondary_hue="slate",
     neutral_hue="slate",
     spacing_size="sm",
     radius_size="lg",
     font=[gr.themes.GoogleFont("Inter"), "ui-sans-serif", "system-ui", "sans-serif"],
 ).set(
-    body_background_fill="#f5f7fb",
+    body_background_fill="#f8fafc",
     block_background_fill="#ffffff",
     block_border_width="1px",
     block_border_color="#e2e8f0",
-    block_shadow="0 10px 35px rgba(15, 23, 42, 0.07)",
-    button_primary_background_fill="#2563eb",
-    button_primary_background_fill_hover="#1d4ed8",
+    block_shadow="0 10px 30px rgba(15, 23, 42, 0.04)",
+    button_primary_background_fill="linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
+    button_primary_background_fill_hover="linear-gradient(135deg, #1d4ed8 0%, #4338ca 100%)",
     button_primary_text_color="#ffffff",
-    button_secondary_background_fill="#f8fafc",
-    button_secondary_text_color="#172033",
+    button_secondary_background_fill="#ffffff",
+    button_secondary_text_color="#0f172a",
     input_background_fill="#f8fafc",
-    input_border_color="#e2e8f0",
-    block_label_text_color="#64748b",
-    block_title_text_color="#172033",
-    body_text_color="#172033",
+    input_border_color="#cbd5e1",
+    block_label_text_color="#475569",
+    block_title_text_color="#0f172a",
+    body_text_color="#0f172a",
     border_color_primary="#e2e8f0"
 )
 
 custom_css = """
-#app-header { text-align: center; padding: 2rem 0; }
-#app-header h1 { color: #172033; font-weight: 700; margin-bottom: 0.5rem; font-size: 2.5rem; }
-#app-header h3 { color: #64748b; font-weight: 400; margin-top: 0; font-size: 1.1rem; }
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Highlight Model Selection */
-#model-select { border: 2px solid #2563eb !important; border-radius: 8px; box-shadow: 0 0 10px rgba(37,99,235,0.15) !important; background-color: #eff6ff !important; }
+body, html {
+    font-family: 'Inter', sans-serif !important;
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+}
 
-/* Highlight Random Fill Button */
-#random-fill-btn { background-color: #ea580c !important; color: white !important; border: none !important; font-weight: 600 !important; font-size: 1.05rem !important; transition: all 0.2s; }
-#random-fill-btn:hover { background-color: #c2410c !important; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(234,88,12,0.2) !important; }
+h1, h2, h3, .hero-title {
+    font-family: 'Outfit', sans-serif !important;
+}
+
+/* Custom Header Dashboard */
+.custom-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%);
+    border-radius: 20px;
+    padding: 36px 40px;
+    color: white;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(165, 180, 252, 0.3);
+    color: #a5b4fc;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.hero-title {
+    font-size: 2.3rem !important;
+    font-weight: 800 !important;
+    margin: 0 0 10px 0 !important;
+    color: #ffffff !important;
+    letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+    font-size: 1.05rem;
+    color: #94a3b8;
+    max-width: 750px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.kpi-card {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.kpi-icon {
+    font-size: 1.5rem;
+}
+
+.kpi-val {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    font-family: 'Outfit', sans-serif;
+}
+
+.kpi-lbl {
+    display: block;
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Control Panel Box */
+#control-panel {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    padding: 20px 24px !important;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.03) !important;
+    margin-bottom: 20px !important;
+}
+
+#model-select {
+    border: 2px solid #6366f1 !important;
+    border-radius: 10px !important;
+    background-color: #f5f3ff !important;
+    transition: all 0.2s ease !important;
+}
+
+#model-select:focus-within {
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+}
+
+#random-fill-btn {
+    background: linear-gradient(135deg, #ea580c 0%, #f97316 100%) !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.25) !important;
+    transition: all 0.25s ease !important;
+}
+
+#random-fill-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(234, 88, 12, 0.35) !important;
+}
+
+#predict-btn {
+    background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%) !important;
+    color: white !important;
+    border: none !important;
+    font-weight: 800 !important;
+    font-size: 1.15rem !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.28) !important;
+    transition: all 0.25s ease !important;
+    margin-top: 16px !important;
+}
+
+#predict-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4) !important;
+}
+
+/* Category Card Headers */
+.category-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.03);
+}
+
+.category-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.category-title span {
+    font-size: 1.3rem;
+}
+
+/* Form Controls */
+.gr-input, .gr-dropdown, select, input {
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+}
 
 /* Dictionary Table Styles */
 #dict-tab table { display: block; overflow-x: auto; white-space: nowrap; width: 100%; border-collapse: collapse; }
 #dict-tab th, #dict-tab td { border: 1px solid #e2e8f0; padding: 12px 16px; white-space: normal; vertical-align: top; }
 #dict-tab th { background-color: #f8fafc; font-weight: 600; text-align: left; white-space: nowrap; }
-#dict-tab td:nth-child(2) { min-width: 180px; font-weight: 600; color: #1e293b; } /* Variable Name */
-#dict-tab td:nth-child(6) { min-width: 450px; } /* Description */
+#dict-tab td:nth-child(2) { min-width: 180px; font-weight: 600; color: #1e293b; }
+#dict-tab td:nth-child(6) { min-width: 450px; }
 #dict-tab tr:nth-child(even) { background-color: #fafafa; }
 """
 
-
+# Helper to classify features into visual categories
+def get_feature_category(feat):
+    lower = feat.lower()
+    if any(k in lower for k in ['1st sem', '2nd sem', 'approval', 'grade', 'eval', 'approved_total']):
+        return 'academic'
+    elif any(k in lower for k in ['age', 'gender', 'marital', 'mother', 'father', 'displaced', 'special needs', 'nationality', 'international']):
+        return 'demographic'
+    elif any(k in lower for k in ['course', 'application', 'previous qualification', 'attendance']):
+        return 'application'
+    else:
+        return 'financial'
 
 # 3. Build UI
 with gr.Blocks(theme=custom_theme, css=custom_css, js=js_func) as app:
-    with gr.Column(elem_id="app-header"):
-        gr.Markdown("# 🎓 Student Retention AI\n### Advanced predictive analytics for student success")
+    
+    # Custom Dashboard Header
+    gr.HTML("""
+    <div class="custom-hero">
+        <div class="hero-badge">✨ Multi-Model Stacking Ensemble AI</div>
+        <h1 class="hero-title">Student Retention Analytics & Prediction</h1>
+        <div class="hero-subtitle">
+            An advanced machine learning framework analyzing academic performance, socioeconomics, and student background to classify retention outcomes (Graduate, Enrolled, or Dropout).
+        </div>
+        
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <span class="kpi-icon">⚡</span>
+                <div>
+                    <span class="kpi-val">89.04%</span>
+                    <span class="kpi-lbl">Stacked ROC-AUC</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-icon">🎯</span>
+                <div>
+                    <span class="kpi-val">77.76%</span>
+                    <span class="kpi-lbl">Accuracy Score</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-icon">🤖</span>
+                <div>
+                    <span class="kpi-val">5 Models</span>
+                    <span class="kpi-lbl">Tuned Algorithms</span>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-icon">📊</span>
+                <div>
+                    <span class="kpi-val">4,424</span>
+                    <span class="kpi-lbl">Dataset Records</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    """)
     
     with gr.Tabs():
-        with gr.Tab("Prediction"):
+        with gr.Tab("🎯 Prediction Engine"):
             
             model_choices = []
             for m in models_cache.keys():
                 display_name = format_name(m)
-                if m == "final_stacked_ensemble_model": display_name += " (Best Choice)"
+                if m == "final_stacked_ensemble_model": display_name += " ★ (Best Performance)"
                 model_choices.append((display_name, m))
                 
             if not model_choices:
                 raise RuntimeError("No machine learning models were loaded successfully. Check dependencies in requirements.txt.")
             default_model = model_choices[-1][1]
-            selected_model = gr.Dropdown(choices=model_choices, value=default_model, label="Select Prediction Model", elem_id="model-select")
             
-            gr.Markdown("Fill in the student details below, or click Random Fill to generate sample data.")
-            random_btn = gr.Button("🎲 Random Fill", elem_id="random-fill-btn")
+            with gr.Column(elem_id="control-panel"):
+                with gr.Row():
+                    selected_model = gr.Dropdown(
+                        choices=model_choices, 
+                        value=default_model, 
+                        label="Choose Prediction Algorithm", 
+                        elem_id="model-select",
+                        scale=3
+                    )
+                    random_btn = gr.Button("🎲 Auto-Fill Random Profile", elem_id="random-fill-btn", scale=1)
             
-            input_components = []
-            with gr.Row():
-                # Split into 3 columns for better layout
-                cols = [gr.Column() for _ in range(3)]
-                
-                for idx, feat in enumerate(all_features):
-                    with cols[idx % 3]:
-                        opts = get_options(feat)
-                        is_visible = feat in model_features[default_model]
-                        info_text = get_info(feat)
-                        if opts:
-                            comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_text, visible=is_visible)
-                        else:
-                            comp = gr.Number(label=format_name(feat), value=0, info=info_text, visible=is_visible)
-                        input_components.append(comp)
+            gr.Markdown("#### Fill in student parameters across the categories below to generate outcome predictions:")
             
-            submit_btn = gr.Button("Predict Student Outcome", variant="primary")
-            output_label = gr.Label(num_top_classes=3, label="Prediction Probability")
+            # Map features to categories maintaining exact order in all_features
+            academic_feats = [f for f in all_features if get_feature_category(f) == 'academic']
+            demographic_feats = [f for f in all_features if get_feature_category(f) == 'demographic']
+            application_feats = [f for f in all_features if get_feature_category(f) == 'application']
+            financial_feats = [f for f in all_features if get_feature_category(f) == 'financial']
+            
+            feature_comp_map = {}
+            
+            with gr.Tabs():
+                with gr.Tab("📘 Academic Performance (1st & 2nd Sem)"):
+                    with gr.Row():
+                        cols = [gr.Column() for _ in range(3)]
+                        for idx, feat in enumerate(academic_feats):
+                            with cols[idx % 3]:
+                                opts = get_options(feat)
+                                is_vis = feat in model_features[default_model]
+                                info_txt = get_info(feat)
+                                if opts:
+                                    comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
+                                else:
+                                    comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
+                                feature_comp_map[feat] = comp
+
+                with gr.Tab("👤 Demographics & Family Background"):
+                    with gr.Row():
+                        cols = [gr.Column() for _ in range(3)]
+                        for idx, feat in enumerate(demographic_feats):
+                            with cols[idx % 3]:
+                                opts = get_options(feat)
+                                is_vis = feat in model_features[default_model]
+                                info_txt = get_info(feat)
+                                if opts:
+                                    comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
+                                else:
+                                    comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
+                                feature_comp_map[feat] = comp
+
+                with gr.Tab("📝 Application & Prior Qualifications"):
+                    with gr.Row():
+                        cols = [gr.Column() for _ in range(3)]
+                        for idx, feat in enumerate(application_feats):
+                            with cols[idx % 3]:
+                                opts = get_options(feat)
+                                is_vis = feat in model_features[default_model]
+                                info_txt = get_info(feat)
+                                if opts:
+                                    comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
+                                else:
+                                    comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
+                                feature_comp_map[feat] = comp
+
+                with gr.Tab("💳 Financial & Macroeconomic Indicators"):
+                    with gr.Row():
+                        cols = [gr.Column() for _ in range(3)]
+                        for idx, feat in enumerate(financial_feats):
+                            with cols[idx % 3]:
+                                opts = get_options(feat)
+                                is_vis = feat in model_features[default_model]
+                                info_txt = get_info(feat)
+                                if opts:
+                                    comp = gr.Dropdown(choices=opts, label=format_name(feat), info=info_txt, visible=is_vis)
+                                else:
+                                    comp = gr.Number(label=format_name(feat), value=0, info=info_txt, visible=is_vis)
+                                feature_comp_map[feat] = comp
+
+            # Re-construct input_components in EXACT order of all_features
+            input_components = [feature_comp_map[f] for f in all_features]
+
+            submit_btn = gr.Button("⚡ Run Retention Prediction Engine", variant="primary", elem_id="predict-btn")
+            output_label = gr.Label(num_top_classes=3, label="Predicted Outcome Probabilities")
             
             def update_visibility(model_name):
                 req_feats = model_features.get(model_name, [])
@@ -330,14 +621,15 @@ with gr.Blocks(theme=custom_theme, css=custom_css, js=js_func) as app:
             random_btn.click(fn=randomize, inputs=input_components, outputs=input_components)
             submit_btn.click(fn=predict, inputs=[selected_model] + input_components, outputs=output_label)
 
-        with gr.Tab("How It Works"):
+        with gr.Tab("💡 How It Works & Architecture"):
             with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "how_it_works.html"), "r", encoding="utf-8") as f:
                 html_content = f.read()
             import base64
             encoded_html = base64.b64encode(html_content.encode('utf-8')).decode('utf-8')
-            iframe_code = f'<iframe src="data:text/html;base64,{encoded_html}" width="100%" style="height: 85vh; border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></iframe>'
+            iframe_code = f'<iframe src="data:text/html;base64,{encoded_html}" width="100%" style="height: 88vh; border: none; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.06);"></iframe>'
             gr.HTML(value=iframe_code)
-        with gr.Tab("Dataset Dictionary"):
+
+        with gr.Tab("📖 Dataset Dictionary & Feature Docs"):
             with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "dataset_dictionary.md"), "r", encoding="utf-8") as f:
                 dict_content = f.read()
             with gr.Column(elem_id="dict-tab"):
