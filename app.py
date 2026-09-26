@@ -187,7 +187,7 @@ def get_info(name):
 def predict(model_name, *args):
     inputs = {f: v for f, v in zip(all_features, args)}
     req_features = model_features[model_name]
-    row = {f: (inputs[f] if inputs[f] is not None else 0.0) for f in req_features}
+    row = {f: (inputs[f] if inputs[f] not in (None, "") else 0.0) for f in req_features}
     
     df = pd.DataFrame([row], columns=req_features)
     pipeline = models_cache[model_name]
@@ -610,6 +610,11 @@ with gr.Blocks(theme=custom_theme, css=custom_css, js=js_func) as app:
             with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "how_it_works.html"), "r", encoding="utf-8") as f:
                 html_content = f.read()
             import base64
+            cm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "stacked_cm.png")
+            if os.path.exists(cm_path):
+                with open(cm_path, "rb") as img_f:
+                    cm_b64 = base64.b64encode(img_f.read()).decode('utf-8')
+                html_content = html_content.replace('src="stacked_cm.png"', f'src="data:image/png;base64,{cm_b64}"')
             encoded_html = base64.b64encode(html_content.encode('utf-8')).decode('utf-8')
             iframe_code = f'<iframe src="data:text/html;base64,{encoded_html}" width="100%" style="height: 88vh; border: none; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.06);"></iframe>'
             gr.HTML(value=iframe_code)
