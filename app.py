@@ -187,7 +187,7 @@ def get_info(name):
 def predict(model_name, *args):
     inputs = {f: v for f, v in zip(all_features, args)}
     req_features = model_features[model_name]
-    row = {f: inputs.get(f, 0.0) for f in req_features}
+    row = {f: (inputs[f] if inputs[f] is not None else 0.0) for f in req_features}
     
     df = pd.DataFrame([row], columns=req_features)
     pipeline = models_cache[model_name]
