@@ -15,11 +15,19 @@ try:
 except Exception:
     pass
 
-# Patch for older sklearn versions (solves _RemainderColsList loading issue)
+# Patch for older/newer sklearn version unpickling compatibility
 import sklearn.compose._column_transformer
 class _RemainderColsList(list):
     pass
 sklearn.compose._column_transformer._RemainderColsList = _RemainderColsList
+
+from sklearn.linear_model import LogisticRegression
+def _logistic_getattr(self, name):
+    if name == 'multi_class':
+        return 'auto'
+    raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+
+LogisticRegression.__getattr__ = _logistic_getattr
 
 # 1. Load Models
 models_cache = {}
