@@ -36,7 +36,7 @@ def load_models():
         label_encoder = joblib.load(le_path)
 
     joblib_files = [
-        "final_elastic_net_model.joblib",
+        "final_elasticnet_model.joblib",
         "final_lasso_model.joblib",
         "final_xgboost_model.joblib",
         "final_gradient_boosting_model.joblib",
