@@ -1,14 +1,3 @@
----
-title: Student Retention Analysis & Prediction System
-emoji: 🎓
-colorFrom: indigo
-colorTo: blue
-sdk: gradio
-sdk_version: 4.44.1
-app_file: app.py
-pinned: false
----
-
 # Student Retention Analysis & Prediction System
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
