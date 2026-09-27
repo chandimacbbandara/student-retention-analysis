@@ -4,7 +4,9 @@
 [![Gradio](https://img.shields.io/badge/Gradio-4.44.1-FF5500?style=for-the-badge&logo=gradio&logoColor=white)](https://gradio.app/)
 [![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.7.2-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![XGBoost](https://img.shields.io/badge/XGBoost-2.0%2B-111111?style=for-the-badge&logo=xgboost&logoColor=white)](https://xgboost.readthedocs.io/)
-[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Spaces-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/spaces)
+[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Live%20Demo-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/spaces/chandimabandara/student-retention-analysis)
+
+**Live Demo Application:** [https://huggingface.co/spaces/chandimabandara/student-retention-analysis](https://huggingface.co/spaces/chandimabandara/student-retention-analysis)
 
 An end-to-end Machine Learning solution designed to predict higher education student retention outcomes (**Graduate**, **Enrolled**, or **Dropout**). The project combines statistical Exploratory Data Analysis (EDA), domain-specific feature engineering, class imbalance mitigation via SMOTE, hyperparameter tuning, and a 5-Fold Stacking Ensemble deployed via an interactive Gradio web application.
 
@@ -172,7 +174,10 @@ Open your browser and navigate to `http://localhost:7860`.
 
 ## Hugging Face Spaces Deployment
 
-This repository is pre-configured for deployment to **Hugging Face Spaces** using the `gradio` SDK:
+The live application is hosted on **Hugging Face Spaces**:
+👉 **[https://huggingface.co/spaces/chandimabandara/student-retention-analysis](https://huggingface.co/spaces/chandimabandara/student-retention-analysis)**
+
+To deploy updates to Hugging Face:
 
 ```bash
 # Push directly to your Hugging Face Space remote
