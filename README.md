@@ -9,7 +9,7 @@ app_file: app.py
 pinned: false
 ---
 
-# 🎓 Student Retention Analysis & Prediction System
+# Student Retention Analysis & Prediction System
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Gradio](https://img.shields.io/badge/Gradio-4.44.1-FF5500?style=for-the-badge&logo=gradio&logoColor=white)](https://gradio.app/)
@@ -17,11 +17,11 @@ pinned: false
 [![XGBoost](https://img.shields.io/badge/XGBoost-2.0%2B-111111?style=for-the-badge&logo=xgboost&logoColor=white)](https://xgboost.readthedocs.io/)
 [![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Spaces-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/spaces)
 
-An end-to-end Machine Learning solution designed to predict higher education student retention outcomes (**Graduate**, **Enrolled**, or **Dropout**). The project combines rigorous statistical Exploratory Data Analysis (EDA), domain-specific feature engineering, class imbalance mitigation via SMOTE, hyperparameter tuning, and a high-performance **5-Fold Stacking Ensemble** deployed via an interactive Gradio web application.
+An end-to-end Machine Learning solution designed to predict higher education student retention outcomes (**Graduate**, **Enrolled**, or **Dropout**). The project combines statistical Exploratory Data Analysis (EDA), domain-specific feature engineering, class imbalance mitigation via SMOTE, hyperparameter tuning, and a 5-Fold Stacking Ensemble deployed via an interactive Gradio web application.
 
 ---
 
-## 📌 Executive Summary & Objectives
+## Executive Summary & Objectives
 
 Early detection of students at risk of dropping out allows academic institutions to deliver timely financial, academic, and psychological intervention. This project tackles the retention prediction challenge through a multi-stage data science workflow:
 - **Primary Goal**: Classify student academic status into three categories (*Dropout*, *Enrolled*, *Graduate*) with high reliability and calibrated probabilities.
@@ -30,7 +30,7 @@ Early detection of students at risk of dropping out allows academic institutions
 
 ---
 
-## 📊 Dataset & Feature Architecture
+## Dataset & Feature Architecture
 
 The dataset originates from the *Research Center for Endogenous Resource Valorization, Polytechnic Institute of Portalegre*. It captures student demographic backgrounds, socioeconomic indicators, academic history, and macroeconomic context upon enrollment.
 
@@ -53,7 +53,7 @@ To enhance predictive power, key ratio and trend features were constructed:
 
 ---
 
-## 🔍 Exploratory Data Analysis & Preprocessing
+## Exploratory Data Analysis & Preprocessing
 
 1. **Statistical Hypothesis Testing**: Applied ANOVA, Chi-Square contingency tests, Fisher's Exact test, and Tukey HSD to isolate the most statistically significant feature subsets.
 2. **Multicollinearity Removal**: Filtered highly collinear features (`|r| > 0.85`) to maintain linear model stability.
@@ -61,7 +61,7 @@ To enhance predictive power, key ratio and trend features were constructed:
 
 ---
 
-## 🏗️ Machine Learning Architecture & Stacking Ensemble
+## Machine Learning Architecture & Stacking Ensemble
 
 The system utilizes a **5-Fold Cross-Validated Stacking Ensemble** architecture. Four complementary base estimators generate out-of-fold probability predictions, which are passed into a Logistic Regression meta-learner.
 
@@ -103,7 +103,7 @@ graph TD
 
 ---
 
-## 📈 Model Performance & Evaluation
+## Model Performance & Evaluation
 
 The **Stacked Ensemble** achieved top-tier performance on held-out test data, outperforming individual base models and all statistical baselines across **Accuracy**, **Macro-F1**, and **ROC-AUC**.
 
@@ -111,15 +111,15 @@ The **Stacked Ensemble** achieved top-tier performance on held-out test data, ou
 
 | Model | Accuracy | Macro-F1 | ROC-AUC | Description / Strategy |
 | :--- | :---: | :---: | :---: | :--- |
-| 🏆 **FINAL STACKED ENSEMBLE** | **77.76%** | **72.10%** | **89.04%** | **Meta-Learner combining all 4 base models** |
-| ⚡ **Final XGBoost (Tuned)** | 77.40% | 72.48% | 88.67% | Gradient Boosted Decision Trees |
-| 🌲 **Final Gradient Boosting (Tuned)** | 77.03% | 72.37% | 88.84% | Scikit-Learn Gradient Boosting |
-| 🎯 **Final LASSO (Tuned)** | 74.99% | 70.88% | 88.45% | Logistic Regression with L1 Penalty |
-| ⚖️ **Final Elastic Net (Tuned)** | 74.95% | 70.83% | 88.42% | Logistic Regression with L1 + L2 Penalty |
+| **FINAL STACKED ENSEMBLE** | **77.76%** | **72.10%** | **89.04%** | **Meta-Learner combining all 4 base models** |
+| **Final XGBoost (Tuned)** | 77.40% | 72.48% | 88.67% | Gradient Boosted Decision Trees |
+| **Final Gradient Boosting (Tuned)** | 77.03% | 72.37% | 88.84% | Scikit-Learn Gradient Boosting |
+| **Final LASSO (Tuned)** | 74.99% | 70.88% | 88.45% | Logistic Regression with L1 Penalty |
+| **Final Elastic Net (Tuned)** | 74.95% | 70.83% | 88.42% | Logistic Regression with L1 + L2 Penalty |
 
 ---
 
-### 📊 Comprehensive Alternative Models Comparison
+### Comprehensive Alternative Models Comparison
 
 Below is the evaluation chart comparing all 15 baseline, statistical, regularized, and ensemble model variants tested during research:
 
@@ -129,7 +129,7 @@ Below is the evaluation chart comparing all 15 baseline, statistical, regularize
 
 ---
 
-### 🧩 Stacked Ensemble Confusion Matrix
+### Stacked Ensemble Confusion Matrix
 
 The confusion matrix demonstrates strong class separation, particularly distinguishing between *Dropout* and *Graduate* outcomes while accurately identifying *Enrolled* students:
 
@@ -139,7 +139,7 @@ The confusion matrix demonstrates strong class separation, particularly distingu
 
 ---
 
-## 💻 Web Application & Interactive UI
+## Web Application & Interactive UI
 
 The Gradio web application ([app.py](file:///home/chandima-bandara/Desktop/student-retention-analysis/app.py)) provides a modern, responsive user dashboard:
 
@@ -151,7 +151,7 @@ The Gradio web application ([app.py](file:///home/chandima-bandara/Desktop/stude
 
 ---
 
-## 🚀 Local Installation & Usage Guide
+## Local Installation & Usage Guide
 
 ### Prerequisites
 - Python `3.10` or `3.11`
@@ -181,7 +181,7 @@ Open your browser and navigate to `http://localhost:7860`.
 
 ---
 
-## ☁️ Hugging Face Spaces Deployment
+## Hugging Face Spaces Deployment
 
 This repository is pre-configured for deployment to **Hugging Face Spaces** using the `gradio` SDK:
 
@@ -192,7 +192,7 @@ git push huggingface main
 
 ---
 
-## 📄 License & Attribution
+## License & Attribution
 
 - **Dataset Credit**: Research Center for Endogenous Resource Valorization, Polytechnic Institute of Portalegre.
 - **Project Developer**: Chandima Bandara
